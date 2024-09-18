@@ -4,6 +4,9 @@ import { resolve } from 'path';
 
 export default defineConfig({
   plugins: [react()],
+  server: {
+    host: 'localhost'
+  },
   resolve: {
     alias: {
       '@': resolve(__dirname, 'src'),
