@@ -8,11 +8,9 @@ import styles from '@/styles/auth.module.scss';
 import { useAppSelector } from '@/redux/hooks';
 
 const LoginPage = () => {
-    const navigate = useNavigate();
     const [isSubmit, setIsSubmit] = useState(false);
     const dispatch = useDispatch();
     const isAuthenticated = useAppSelector(state => state.account.isAuthenticated);
-
     let location = useLocation();
     let params = new URLSearchParams(location.search);
     const callback = params?.get("callback");
@@ -26,25 +24,23 @@ const LoginPage = () => {
     const onFinish = async (values: any) => {
         const { username, password } = values;
         setIsSubmit(true);
-        const res = await callLogin(username, password);
+        const res = (await callLogin(username, password)).data;
         setIsSubmit(false);
 
         if (res?.data) {
-            localStorage.setItem('access_token', res.data?.access_token);
+            localStorage.setItem('access_token', res.data.access_token);
             dispatch(setUserLoginInfo(res.data.user))
             message.success('Đăng nhập tài khoản thành công!');
             window.location.href = callback ? callback : '/';
         } else {
             notification.error({
-
                 message: "Có lỗi xảy ra",
-                description:
-                    //@ts-ignore
-                    res.message && Array.isArray(res.message) ? res.message[0] : res.message,
+                description: res.message && Array.isArray(res.message) ? res.message[0] : res.message,
                 duration: 5
             })
         }
     };
+
 
     return (
         <div className={styles["login-page"]}>
@@ -58,7 +54,6 @@ const LoginPage = () => {
                         </div>
                         <Form
                             name="basic"
-                            // style={{ maxWidth: 600, margin: '0 auto' }}
                             onFinish={onFinish}
                             autoComplete="off"
                         >

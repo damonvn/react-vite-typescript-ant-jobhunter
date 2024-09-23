@@ -1,4 +1,13 @@
+import { callFetchAccount } from '@/configs/api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+
+export const fetchAccount = createAsyncThunk(
+    'account/fetchAccount',
+    async () => {
+        const response = await callFetchAccount();
+        return response.data.data;
+    }
+)
 
 interface IState {
     isAuthenticated: boolean;
@@ -82,11 +91,40 @@ export const accountSlide = createSlice({
             state.isRefreshToken = action.payload?.status ?? false;
             state.errorRefreshToken = action.payload?.message ?? "";
         }
-    }
+    },
+    extraReducers: (builder) => {
+        // Add reducers for additional action types here, and handle loading state as needed
+        builder.addCase(fetchAccount.pending, (state, action) => {
+            if (action.payload) {
+                state.isAuthenticated = false;
+                state.isLoading = true;
+            }
+        })
+
+        builder.addCase(fetchAccount.fulfilled, (state, action) => {
+            if (action.payload) {
+                state.isAuthenticated = true;
+                state.isLoading = false;
+                state.user.id = action.payload.user.id;
+                state.user.email = action.payload.user?.email;
+                state.user.name = action.payload.user?.name;
+                state.user.role = action.payload.user?.role;
+                if (!action.payload.user?.role) state.user.role = {};
+                state.user.role.permissions = action?.payload.user?.role?.permissions ?? [];
+            }
+        })
+
+        builder.addCase(fetchAccount.rejected, (state, action) => {
+            if (action.payload) {
+                state.isAuthenticated = false;
+                state.isLoading = false;
+            }
+        })
+    },
 });
 
 export const {
-    setActiveMenu, setUserLoginInfo
+    setActiveMenu, setUserLoginInfo, setRefreshTokenAction, setLogoutAction
 } = accountSlide.actions;
 
 export default accountSlide.reducer;
