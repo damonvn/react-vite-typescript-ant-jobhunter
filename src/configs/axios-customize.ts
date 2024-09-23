@@ -53,6 +53,7 @@ instance.interceptors.response.use(
             && !error.config.headers[NO_RETRY_HEADER]
         ) {
             localStorage.removeItem('access_token');
+            error.config.headers[NO_RETRY_HEADER] = true;
             const access_token = await handleRefreshToken();
             if (access_token) {
                 error.config.headers['Authorization'] = `Bearer ${access_token}`;
