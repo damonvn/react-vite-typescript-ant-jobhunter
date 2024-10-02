@@ -11,6 +11,7 @@ interface AccessTokenResponse {
 
 const mutex = new Mutex();
 const NO_RETRY_HEADER = 'x-no-retry';
+const NO_RETRY_HEADER_400 = 'x-no-retry-400';
 
 const handleRefreshToken = async (): Promise<string | null> => {
     return await mutex.runExclusive(async () => {
@@ -68,6 +69,7 @@ instance.interceptors.response.use(
             && error.config.url === '/api/v1/auth/refresh'
             && location.pathname.startsWith("/admin")
         ) {
+            error.config.handlers[NO_RETRY_HEADER_400] = true;
             const message = error?.response?.data?.error ?? "Có lỗi xảy ra, vui lòng login.";
             //dispatch redux action
             store.dispatch(setRefreshTokenAction({ status: true, message }));

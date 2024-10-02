@@ -162,3 +162,17 @@ export interface ISkill {
     createdAt?: string;
     updatedAt?: string;
 }
+
+export interface IRole {
+    id?: string;
+    name: string;
+    description: string;
+    active: boolean;
+    permissions: IPermission[] | string[];
+
+    createdBy?: string;
+    isDeleted?: boolean;
+    deletedAt?: boolean | null;
+    createdAt?: string;
+    updatedAt?: string;
+}

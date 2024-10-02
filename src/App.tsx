@@ -20,6 +20,11 @@ import ClientCompanyDetailPage from './pages/company/detail';
 import ClientJobPage from './pages/job/ClientJobPage';
 import ClientJobDetailPage from './pages/job/detail';
 import Footer from './components/client/footer.client';
+import NotFound from './components/share/not.found';
+import LayoutAdmin from './components/share/layout.admin';
+import ProtectedRoute from './components/share/protected-route';
+import DashboardPage from './pages/admin/dashboard';
+import RolePage from './pages/admin/role';
 
 const LayoutClient = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -61,13 +66,28 @@ export default function App() {
     {
       path: "/",
       element: (<LayoutApp><LayoutClient /></LayoutApp>),
-      errorElement: <div>404 Not Found</div>,
+      errorElement: <NotFound />,
       children: [
         { index: true, element: <HomePage /> },
         { path: "company", element: <ClientCompanyPage /> },
         { path: "company/:id", element: <ClientCompanyDetailPage /> },
         { path: "job", element: <ClientJobPage /> },
         { path: "job/:id", element: <ClientJobDetailPage /> }
+      ],
+    },
+    {
+      path: "/admin",
+      element: (<LayoutApp><LayoutAdmin /> </LayoutApp>),
+      errorElement: <NotFound />,
+      children: [
+        {
+          index: true, element:
+            <DashboardPage />
+        },
+        {
+          path: "role",
+          element: <RolePage />
+        }
       ],
     },
     {

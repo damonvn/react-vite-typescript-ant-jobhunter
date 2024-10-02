@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 import counterReducer from './slices/counterSlice';
 import accountReducer from './slices/accountSlide';
+import roleReducer from './slices/roleSlide'
 
 export const store = configureStore({
     reducer: {
         counter: counterReducer,
-        account: accountReducer
+        account: accountReducer,
+        role: roleReducer,
     },
 });
 

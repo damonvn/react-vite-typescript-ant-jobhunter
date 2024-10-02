@@ -1,5 +1,5 @@
 import axios from '@/configs/axios-customize'
-import { IAccount, IBackendRes, ICompany, IGetAccount, IJob, IModelPaginate, IResume, ISkill, ISubscribers, IUser } from "@/types/backend"
+import { IAccount, IBackendRes, ICompany, IGetAccount, IJob, IModelPaginate, IPermission, IResume, IRole, ISkill, ISubscribers, IUser } from "@/types/backend"
 
 export const callLogin = (username: string, password: string) => {
     return axios.post<IBackendRes<IAccount>>('/api/v1/auth/login', { username, password })
@@ -102,5 +102,29 @@ export const callUploadSingleFile = (file: any, folderType: string) => {
             "Content-Type": "multipart/form-data",
         },
     });
+}
+
+export const callDeleteRole = (id: string) => {
+    return axios.delete<IBackendRes<IRole>>(`/api/v1/roles/${id}`);
+}
+
+export const callFetchPermission = (query: string) => {
+    return axios.get<IBackendRes<IModelPaginate<IPermission>>>(`/api/v1/permissions?${query}`);
+}
+
+export const callFetchRole = (query: string) => {
+    return axios.get<IBackendRes<IModelPaginate<IRole>>>(`/api/v1/roles?${query}`);
+}
+
+export const callFetchRoleById = (id: string) => {
+    return axios.get<IBackendRes<IRole>>(`/api/v1/roles/${id}`);
+}
+
+export const callCreateRole = (role: IRole) => {
+    return axios.post<IBackendRes<IRole>>('/api/v1/roles', { ...role })
+}
+
+export const callUpdateRole = (role: IRole, id: string) => {
+    return axios.put<IBackendRes<IRole>>(`/api/v1/roles`, { id, ...role })
 }
 
